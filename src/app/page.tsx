@@ -3,8 +3,14 @@ import Link from "next/link";
 import Section from "@/components/Section";
 import Gallery from "@/components/Gallery";
 import WorkCard from "@/components/WorkCard";
+import HeroRotator from "@/components/HeroRotator";
+import Stats from "@/components/Stats";
+import ServiceTabs from "@/components/ServiceTabs";
+import Marquee from "@/components/Marquee";
 import { about, clients, gcWorks, misi, projects, sectors, services, single, tools, visi } from "@/data/content";
 import { site } from "@/data/site";
+
+const d = (n: number, step = 90) => ({ ["--d" as string]: `${n * step}ms` });
 
 export default function Home() {
   const hero = single("hero"), aboutImg = single("about");
@@ -12,21 +18,30 @@ export default function Home() {
     <>
       {/* HERO */}
       <section className="relative isolate overflow-hidden bg-navy-950 text-white">
-        <Image src={hero.src} alt="Storage tank hasil pekerjaan NKSI" fill priority quality={55} sizes="100vw" className="-z-10 object-cover opacity-40" />
+        <div data-parallax className="absolute inset-0 -z-20 will-change-transform" style={{ transform: "scale(1.08)" }}>
+          <Image src={hero.src} alt="Storage tank hasil pekerjaan NKSI" fill priority quality={55} sizes="100vw" className="object-cover opacity-40" />
+        </div>
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/30" />
-        <div className="container-x py-20 sm:py-28 lg:py-36">
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-gold-400">Est. {site.founded}</p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+        {/* Cahaya dekoratif: radial-gradient statis (tanpa filter blur/animasi berat agar render cepat) */}
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(420px_circle_at_88%_18%,rgb(179_38_43/.30),transparent_70%),radial-gradient(360px_circle_at_40%_100%,rgb(195_154_63/.20),transparent_70%)]" />
+
+        <div className="container-x pb-10 pt-20 sm:pt-28 lg:pt-32">
+          <p className="anim-rise text-xs font-bold uppercase tracking-[0.25em] text-gold-400">Est. {site.founded}</p>
+          <h1 className="anim-rise mt-4 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl" style={{ animationDelay: "120ms" }}>
             {site.name}
           </h1>
-          <p className="mt-5 max-w-2xl text-lg text-slate-200">{site.tagline}</p>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-300">
-            Dari engineering hingga installation, commissioning, dan maintenance: solusi industri terintegrasi untuk proyek Anda.
+          <div className="anim-rise" style={{ animationDelay: "240ms" }}><HeroRotator /></div>
+          <p className="anim-rise mt-4 max-w-2xl text-base leading-relaxed text-slate-300" style={{ animationDelay: "360ms" }}>
+            {site.tagline}. Dari engineering hingga installation, commissioning, dan maintenance.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/kontak" className="rounded-md bg-brand-700 px-6 py-3 font-semibold text-white hover:bg-brand-800">Hubungi Kami</Link>
-            <Link href="#proyek" className="rounded-md border border-white/40 px-6 py-3 font-semibold hover:bg-white/10">Lihat Proyek</Link>
+          <div className="anim-rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: "480ms" }}>
+            <Link href="/kontak" className="rounded-md bg-brand-700 px-6 py-3 font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-lg active:scale-95">Hubungi Kami</Link>
+            <Link href="#proyek" className="rounded-md border border-white/40 px-6 py-3 font-semibold transition hover:-translate-y-0.5 hover:bg-white/10 active:scale-95">Lihat Proyek</Link>
           </div>
+          <div className="anim-rise mt-14" style={{ animationDelay: "600ms" }}><Stats /></div>
+          <a href="#tentang" aria-label="Gulir ke bawah" className="mx-auto mt-8 hidden h-10 w-6 items-start justify-center rounded-full border-2 border-white/40 pt-1.5 sm:flex">
+            <span className="h-2 w-1 rounded-full bg-white" style={{ animation: "bounce-y 1.6s infinite" }} />
+          </a>
         </div>
       </section>
 
@@ -34,13 +49,15 @@ export default function Home() {
       <Section id="tentang" eyebrow="Tentang Kami" title="Kontraktor umum dengan layanan engineering terintegrasi">
         <div className="grid items-start gap-10 lg:grid-cols-2">
           <div className="space-y-4 text-base leading-relaxed text-slate-700">
-            {about.map((p) => <p key={p.slice(0, 24)}>{p}</p>)}
+            {about.map((p, n) => <p key={p.slice(0, 24)} data-reveal="left" style={d(n, 80)}>{p}</p>)}
             <ul className="flex flex-wrap gap-2 pt-2" aria-label="Sektor yang dilayani">
-              {sectors.map((s) => <li key={s} className="rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">{s}</li>)}
+              {sectors.map((s, n) => (
+                <li key={s} data-reveal="zoom" style={d(n, 60)} className="cursor-default rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:text-white">{s}</li>
+              ))}
             </ul>
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg">
-            <Image src={aboutImg.src} alt="Tim NKSI memeriksa komponen fabrikasi di workshop" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" loading="lazy" />
+          <div data-reveal="right" className="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg">
+            <Image src={aboutImg.src} alt="Tim NKSI memeriksa komponen fabrikasi di workshop" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
           </div>
         </div>
       </Section>
@@ -48,16 +65,16 @@ export default function Home() {
       {/* VISI & MISI */}
       <Section id="visi-misi" eyebrow="Visi & Misi" title="Arah dan komitmen kami" tone="mist">
         <div className="grid gap-8 lg:grid-cols-5">
-          <div className="rounded-2xl bg-navy-900 p-8 text-white lg:col-span-2">
+          <div data-reveal="left" className="spot rounded-2xl bg-navy-900 p-8 text-white shadow-xl lg:col-span-2">
             <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-gold-400">Visi</h3>
             <p className="mt-4 text-lg leading-relaxed">{visi}</p>
           </div>
           <div className="lg:col-span-3">
-            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-600">Misi</h3>
+            <h3 data-reveal className="text-sm font-bold uppercase tracking-[0.2em] text-brand-600">Misi</h3>
             <ol className="mt-4 grid gap-4 sm:grid-cols-2">
               {misi.map((m, i) => (
-                <li key={m} className="rounded-xl bg-white p-5 shadow-sm">
-                  <span className="text-2xl font-extrabold text-brand-700">{String(i + 1).padStart(2, "0")}</span>
+                <li key={m} data-reveal style={d(i, 110)} className="group spot rounded-xl bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:shadow-xl">
+                  <span className="text-3xl font-extrabold text-brand-700 transition-transform duration-300 group-hover:scale-110 inline-block">{String(i + 1).padStart(2, "0")}</span>
                   <p className="mt-2 text-sm leading-relaxed text-slate-700">{m}</p>
                 </li>
               ))}
@@ -67,69 +84,45 @@ export default function Home() {
       </Section>
 
       {/* OUR CORE SERVICES */}
-      <Section id="layanan" eyebrow="Our Core Services" title="Layanan inti kami">
-        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s) => (
-            <li key={s.no} className="rounded-xl border border-slate-200 p-6 shadow-sm">
-              <p className="text-sm font-bold text-brand-600">{s.no}</p>
-              <h3 className="mt-1 text-xl font-bold text-navy-900">{s.title}</h3>
-              {s.desc && <p className="mt-3 text-sm leading-relaxed text-slate-600">{s.desc}</p>}
-              {s.items.length > 0 && (
-                <ul className="mt-3 space-y-1.5 text-sm text-slate-700">
-                  {s.items.map((it) => (
-                    <li key={it} className="flex gap-2"><span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-600" />{it}</li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
+      <Section id="layanan" eyebrow="Our Core Services" title="Layanan inti kami" intro="Pilih layanan untuk melihat cakupan pekerjaannya.">
+        <div data-reveal><ServiceTabs services={services} /></div>
       </Section>
 
       {/* KLIEN */}
       <Section id="klien" eyebrow="Klien" title="Klien kami" tone="mist">
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {clients.map((c) => (
-            <li key={c.name} className="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4">
-              <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-navy-900 text-sm font-extrabold text-gold-400">
-                {c.name.replace(/^PT\.?\s*/i, "").charAt(0).toUpperCase()}
-              </span>
-              <div>
-                <p className="font-semibold leading-snug text-navy-900">{c.name}</p>
-                {c.place && <p className="text-xs text-slate-600">{c.place}</p>}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div data-reveal><Marquee clients={clients} /></div>
       </Section>
 
       {/* TOOLS */}
-      <Section id="tools" eyebrow="Tools" title="Peralatan kerja kami" intro="Dokumentasi peralatan kerja NKSI.">
+      <Section id="tools" eyebrow="Tools" title="Peralatan kerja kami" intro="Dokumentasi peralatan kerja NKSI. Klik foto untuk memperbesar; geser atau gunakan panah keyboard untuk berpindah.">
         <Gallery images={tools} label="Peralatan kerja NKSI" />
       </Section>
 
       {/* PROYEK KAMI */}
-      <Section id="proyek" eyebrow="Project Kami" title="Proyek yang telah kami kerjakan" tone="mist">
+      <Section id="proyek" eyebrow="Project Kami" title="Proyek yang telah kami kerjakan" intro="Arahkan kursor ke kartu untuk melihat foto lainnya." tone="mist">
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p) => <li key={p.slug}><WorkCard work={p} base="/proyek" /></li>)}
+          {projects.map((p, n) => <li key={p.slug} data-reveal style={d(n % 3, 120)}><WorkCard work={p} base="/proyek" /></li>)}
         </ul>
       </Section>
 
       {/* GENERAL CONTRACTOR */}
       <Section id="general-contractor" eyebrow="General Contractor" title="Proyek General Contractor kami">
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {gcWorks.map((p) => <li key={p.slug}><WorkCard work={p} base="/general-contractor" /></li>)}
+          {gcWorks.map((p, n) => <li key={p.slug} data-reveal style={d(n % 3, 120)}><WorkCard work={p} base="/general-contractor" /></li>)}
         </ul>
       </Section>
 
       {/* CTA */}
-      <section className="bg-brand-700 py-14 text-white">
-        <div className="container-x flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+      <section className="relative overflow-hidden bg-brand-700 py-14 text-white">
+        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(300px_circle_at_5%_0%,rgb(255_255_255/.12),transparent_70%)]" />
+        <div className="container-x relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center" data-reveal>
           <div>
             <h2 className="text-2xl font-extrabold sm:text-3xl">Let&rsquo;s build your project together</h2>
             <p className="mt-2 max-w-xl text-brand-100">Integrated Industrial Solutions untuk kebutuhan proyek Anda.</p>
           </div>
-          <Link href="/kontak" className="rounded-md bg-white px-6 py-3 font-semibold text-brand-800 hover:bg-brand-50">Hubungi Kami</Link>
+          <Link href="/kontak" className="group rounded-md bg-white px-6 py-3 font-semibold text-brand-800 transition hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-lg active:scale-95">
+            Hubungi Kami <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1">→</span>
+          </Link>
         </div>
       </section>
     </>

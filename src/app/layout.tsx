@@ -3,6 +3,8 @@ import "@fontsource-variable/plus-jakarta-sans";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import RevealObserver from "@/components/RevealObserver";
+import ScrollUI from "@/components/ScrollUI";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -46,6 +48,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="id">
       <body className="antialiased">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c") }} />
+        <ScrollUI />
+        <RevealObserver />
         <Header />
         <main id="main">{children}</main>
         <Footer />

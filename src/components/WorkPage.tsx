@@ -10,7 +10,7 @@ export default function WorkPage({ work, category, base, anchor, others }: { wor
           <nav aria-label="Breadcrumb" className="text-sm text-slate-300">
             <Link href="/" className="hover:text-white">Beranda</Link> / <Link href={`/#${anchor}`} className="hover:text-white">{category}</Link>
           </nav>
-          <h1 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">{work.title}</h1>
+          <h1 className="anim-rise mt-4 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">{work.title}</h1>
           {work.client && <p className="mt-2 text-slate-300">{work.client}</p>}
         </div>
       </section>
